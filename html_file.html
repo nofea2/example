@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ON YOURS CAKE - 생화수제케이크</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="header-nav">
+                <button onclick="showOrderLookup()">주문 조회</button>
+                <button onclick="showOrderCancel()">주문 취소/수정</button>
+            </div>
+            <div class="logo">
+                <h1>ON YOURS CAKE</h1>
+                <p>생화 수제케이크 전문점</p>
+            </div>
+            <div class="social-links">
+                <a href="#">📷</a>
+                <a href="#">💬</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <h2>자연의 아름다움을 담은<br><span class="highlight">생화 수제케이크</span></h2>
+            <p>신선한 생화와 정성으로 만든 당신만의 특별한 케이크</p>
+            <div class="hero-notice">
+                온라인 주문 전용 | 전화주문 불가 | 최소 3일 전 주문
+            </div>
+        </section>
+
+        <!-- Cake Gallery -->
+        <section class="gallery">
+            <h3>FRESH FLOWER CAKES</h3>
+            <div class="cake-grid" id="cakeGrid">
+                <!-- 케이크 카드들이 여기에 동적으로 생성됩니다 -->
+            </div>
+        </section>
+
+        <!-- Order Management -->
+        <section class="order-management">
+            <div class="management-content">
+                <h3>주문 관리</h3>
+                <p>주문 조회, 취소, 수정이 필요하신가요?</p>
+                <div class="management-buttons">
+                    <button class="btn" onclick="showOrderLookup()">주문 조회</button>
+                    <button class="btn" onclick="showOrderCancel()">주문 취소/수정</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <h3>ON YOURS CAKE</h3>
+        <p>매일 오전 9시 ~ 오후 7시 운영</p>
+        <p>서울시 강남구 테헤란로 123 (예시 주소)</p>
+        <p>Instagram: @onyourscake | KakaoTalk: @onyourscake</p>
+        <div class="footer-notice">
+            <strong>주문 안내:</strong> 생화케이크 특성상 최소 3일 전 주문 필요 | 취소는 수령일 2일 전까지 가능 | 날씨에 따라 생화 종류가 변경될 수 있습니다
+        </div>
+    </footer>
+
+    <!-- 채팅 버튼 -->
+    <button class="chat-button" onclick="toggleChat()">💬</button>
+
+    <!-- 채팅창 -->
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div>
+                <h4>ON YOURS CAKE</h4>
+                <div class="chat-status">
+                    <span class="status-dot"></span>
+                    온라인 상담
+                </div>
+            </div>
+            <button class="chat-close" onclick="toggleChat()">✕</button>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="message admin">
+                안녕하세요! ON YOURS CAKE입니다 🌸<br>
+                생화케이크 상담이 필요하시면 언제든 말씀해주세요!
+                <div class="message-time">오늘 오후 2:30</div>
+            </div>
+            
+            <div class="quick-messages">
+                <button class="quick-message-btn" onclick="sendQuickMessage('주문 관련 문의')">주문 관련 문의</button>
+                <button class="quick-message-btn" onclick="sendQuickMessage('디자인 상담')">디자인 상담</button>
+                <button class="quick-message-btn" onclick="sendQuickMessage('가격 문의')">가격 문의</button>
+                <button class="quick-message-btn" onclick="sendQuickMessage('배송/픽업 문의')">배송/픽업 문의</button>
+            </div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                상담사가 입력중입니다
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="message-input-area">
+            <textarea 
+                class="message-input" 
+                id="messageInput" 
+                placeholder="메시지를 입력하세요..."
+                rows="1"
+                onkeypress="handleEnterKey(event)"
+                oninput="adjustTextareaHeight(this)"
+            ></textarea>
+            <button class="send-button" onclick="sendMessage()">
+                ↑
+            </button>
+        </div>
+    </div>
+
+    <!-- Order Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>주문하기</h2>
+                <span class="modal-close" onclick="closeOrderModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="step-indicator">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <span>디자인 선택</span>
+                    </div>
+                    <div class="step-divider"></div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <span>사이즈 선택</span>
+                    </div>
+                    <div class="step-divider"></div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <span>정보 입력</span>
+                    </div>
+                </div>
+
+                <!-- Step 1: 디자인 선택 -->
+                <div class="step-content active" data-step="1">
+                    <h3>디자인을 선택해주세요</h3>
+                    <div class="design-grid" id="designGrid">
+                        <!-- 디자인 옵션들이 여기에 동적으로 생성됩니다 -->
+                    </div>
+                </div>
+
+                <!-- Step 2: 사이즈 선택 -->
+                <div class="step-content" data-step="2">
+                    <h3>사이즈를 선택해주세요</h3>
+                    <div class="size-selector" id="sizeSelector">
+                        <!-- 사이즈 옵션들이 여기에 동적으로 생성됩니다 -->
+                    </div>
+                </div>
+
+                <!-- Step 3: 정보 입력 -->
+                <div class="step-content" data-step="3">
+                    <h3>주문 정보를 입력해주세요</h3>
+                    
+                    <div class="order-summary" id="orderSummary">
+                        <!-- 주문 요약이 여기에 표시됩니다 -->
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerName">이름 *</label>
+                            <input type="text" id="customerName" required placeholder="성함을 입력해주세요">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">연락처 *</label>
+                            <input type="tel" id="phone" required placeholder="010-0000-0000">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pickupDate">수령 희망일 *</label>
+                        <input type="date" id="pickupDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">케이크 메시지 (선택사항)</label>
+                        <input type="text" id="message" placeholder="예: Happy Birthday, 축하합니다 등">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="specialRequests">특별 요청사항 (선택사항)</label>
+                        <textarea id="specialRequests" rows="3" placeholder="생화 색상 선호도, 알레르기, 특별한 요청사항 등이 있으시면 자세히 적어주세요"></textarea>
+                    </div>
+
+                    <div class="order-info">
+                        <strong>주문 안내:</strong><br>
+                        • 생화케이크 특성상 최소 3일 전 주문 부탁드립니다<br>
+                        • 주문 확정 후 50% 선결제를 부탁드립니다<br>
+                        • 수령 시간은 오전 10시 ~ 오후 7시입니다<br>
+                        • 날씨에 따라 생화 종류가 변경될 수 있습니다
+                    </div>
+                </div>
+
+                <div class="step-navigation">
+                    <button class="btn hidden" id="prevBtn" onclick="prevStep()">이전</button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">다음</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Lookup Modal -->
+    <div id="orderLookupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>주문 조회</h2>
+                <span class="modal-close" onclick="closeOrderLookupModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="lookupPhone">주문시 입력한 연락처</label>
+                    <input type="tel" id="lookupPhone" placeholder="010-0000-0000">
+                </div>
+                <button class="btn btn-primary" onclick="lookupOrder()">주문 조회</button>
+                
+                <div id="orderResult" class="hidden">
+                    <!-- 조회 결과가 여기에 표시됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Cancel Modal -->
+    <div id="orderCancelModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>주문 취소/수정</h2>
+                <span class="modal-close" onclick="closeOrderCancelModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="cancelPhone">주문시 입력한 연락처</label>
+                    <input type="tel" id="cancelPhone" placeholder="010-0000-0000">
+                </div>
+                <button class="btn btn-primary" onclick="findOrderForCancel()">주문 찾기</button>
+                
+                <div id="cancelOrderResult" class="hidden">
+                    <!-- 취소/수정 가능한 주문이 여기에 표시됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
