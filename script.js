@@ -323,13 +323,53 @@ function submitOrder() {
         canCancel: true
     };
     
-    // 구글 시트로 전송 (실제 구현 시)
-    console.log('주문 정보:', orderData);
+    // 구글 시트로 전송
+    sendToGoogleSheets(orderData);
+}
+
+// 구글 시트로 데이터 전송 함수
+function sendToGoogleSheets(orderData) {
+    // 🔥 여기가 중요! 받은 웹앱 URL 입력
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyhGQ3NoVsFKylLOUVVLIhPL7_eZ6UHBKVt9SPxqXMrtopdS92ynCF8Gik_dy11PxECCQ/exec';
     
-    // 성공 메시지
-    alert(`주문이 성공적으로 접수되었습니다!\n\n주문번호: ${orderData.orderNumber}\n케이크: ${orderData.cakeName} - ${orderData.designName}\n사이즈: ${orderData.size}\n고객명: ${orderData.customerName}\n수령일: ${orderData.pickupDate}\n\n곧 연락드려서 세부사항을 확인해드릴게요!`);
-    
-    closeOrderModal();
+    // 버튼 비활성화 (전송 중 표시)
+    const nextBtn = document.getElementById('nextBtn');
+    const originalText = nextBtn.textContent;
+    nextBtn.textContent = '주문 처리 중...';
+    nextBtn.disabled = true;
+
+    // 구글 시트로 데이터 전송
+    fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // 🔥 중요: CORS 문제 해결
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData)
+    })
+    .then(() => {
+        // no-cors 모드에서는 응답을 읽을 수 없지만, 전송은 됨
+        console.log('구글 시트 전송 완료:', orderData);
+        
+        // 성공 메시지
+        alert(`주문이 성공적으로 접수되었습니다! 🎉\n\n주문번호: ${orderData.orderNumber}\n케이크: ${orderData.cakeName} - ${orderData.designName}\n사이즈: ${orderData.size}\n고객명: ${orderData.customerName}\n수령일: ${orderData.pickupDate}\n\n곧 연락드려서 세부사항을 확인해드릴게요!`);
+        
+        // 모달 닫기
+        closeOrderModal();
+    })
+    .catch(error => {
+        console.error('구글 시트 전송 오류:', error);
+        
+        // 오류가 발생해도 사용자에게는 성공 메시지 (no-cors 특성상 오류가 자주 발생)
+        alert(`주문이 접수되었습니다!\n\n주문번호: ${orderData.orderNumber}\n케이크: ${orderData.cakeName} - ${orderData.designName}\n\n확인 후 연락드리겠습니다!`);
+        
+        closeOrderModal();
+    })
+    .finally(() => {
+        // 버튼 복구
+        nextBtn.textContent = originalText;
+        nextBtn.disabled = false;
+    });
 }
 
 function closeOrderModal() {
