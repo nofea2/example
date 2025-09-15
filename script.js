@@ -330,7 +330,7 @@ function submitOrder() {
 // 구글 시트로 데이터 전송 함수
 function sendToGoogleSheets(orderData) {
     // 🔥 여기가 중요! 받은 웹앱 URL 입력
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyhGQ3NoVsFKylLOUVVLIhPL7_eZ6UHBKVt9SPxqXMrtopdS92ynCF8Gik_dy11PxECCQ/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzjrn1Zn0BiVlQV9HwESisYctyYjwHRfyXILoVayXBKBLd9mYhAMVdUjmeCpm4_T_T7eg/exec';
     
     // 버튼 비활성화 (전송 중 표시)
     const nextBtn = document.getElementById('nextBtn');
